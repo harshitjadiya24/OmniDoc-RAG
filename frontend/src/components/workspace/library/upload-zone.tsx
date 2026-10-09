@@ -8,7 +8,6 @@ import { useLibrary } from "@/stores/library";
 /** Drop PDFs anywhere on the zone, or pick them with the button. */
 export function UploadZone({ compact = false }: { compact?: boolean }) {
   const upload = useLibrary((s) => s.upload);
-  const inputRef = React.useRef<HTMLInputElement>(null);
   const [over, setOver] = React.useState(false);
   const id = React.useId();
 
@@ -47,7 +46,6 @@ export function UploadZone({ compact = false }: { compact?: boolean }) {
       </p>
       {!compact && <p className="m-0 text-xs text-ink-subtle">Text PDFs and scanned pages (OCR). Up to 50 MB each.</p>}
       <input
-        ref={inputRef}
         id={id}
         type="file"
         accept="application/pdf,.pdf"

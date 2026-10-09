@@ -1,4 +1,5 @@
 import { expect, test } from "@playwright/test";
+import { mockApi } from "./support/mock-api";
 import { expectNoAxeViolations, open, type Theme } from "./support/page";
 
 const ROUTES = [
@@ -10,6 +11,7 @@ const THEMES: Theme[] = ["dark", "light"];
 for (const route of ROUTES) {
   for (const theme of THEMES) {
     test(`${route.path} renders cleanly in ${theme}`, async ({ page }) => {
+      await mockApi(page);
       const problems = await open(page, route.path, theme);
       await expect(page.getByRole("heading", { level: 1 })).toHaveText(route.heading);
       await expect(page.getByRole("heading", { level: 1 })).toHaveCount(1);

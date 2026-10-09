@@ -37,6 +37,11 @@ describe("segment", () => {
     expect(cites.map((c) => c.kind === "cite" && c.group)).toEqual([0, 1]);
     expect(parts[0]).toEqual({ kind: "text", text: "Rent is due monthly " });
   });
+  it("parses a mistyped ID so it can be flagged as unverified", () => {
+    const [cite] = segment("x [DOC-4B3FBCE, p. 6].").filter((p) => p.kind === "cite");
+    expect(cite.kind === "cite" && cite.refs[0]).toMatchObject({ docId: "DOC-4B3FBCE", page: 6 });
+    expect(citationState({ docId: "DOC-4B3FBCE", page: 6, raw: "" }, [src("DOC-4B3FBFCE", 6)])).toBe("unverified");
+  });
   it("leaves ordinary brackets alone", () => {
     expect(segment("See [1] and [note]").every((p) => p.kind === "text")).toBe(true);
   });

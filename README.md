@@ -21,7 +21,7 @@ python -m venv .venv && .venv/bin/pip install -r requirements-dev.txt
 
 # Web app (Node 22)
 cd frontend
-npm ci && npm run dev                    # http://localhost:3000
+npm ci && npm run dev                    # http://localhost:3000 (product site), /app (workspace)
 ```
 
 Locally there are no accounts: one user and one library in `backend/data/library`.

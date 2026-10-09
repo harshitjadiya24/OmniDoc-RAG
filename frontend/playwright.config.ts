@@ -9,7 +9,7 @@ export default defineConfig({
   workers: process.env.CI ? 1 : undefined,
   reporter: process.env.CI ? 'github' : 'list',
   use: {
-    baseURL: 'http://127.0.0.1:3000',
+    baseURL: 'http://127.0.0.1:3200',
     trace: 'on-first-retry',
   },
   projects: [
@@ -19,9 +19,10 @@ export default defineConfig({
     },
   ],
   webServer: {
-    command: 'npm run build && npm run start',
-    url: 'http://127.0.0.1:3000',
-    reuseExistingServer: !process.env.CI,
+    // Its own port, never reused, so a running `next dev` on 3000 can't be picked up by mistake.
+    command: 'npm run build && npx next start -p 3200',
+    url: 'http://127.0.0.1:3200',
+    reuseExistingServer: false,
     stdout: 'ignore',
     stderr: 'pipe',
   },

@@ -17,6 +17,8 @@ export async function open(page: Page, path: string, theme: Theme = "dark"): Pro
 }
 
 export async function expectNoAxeViolations(page: Page): Promise<void> {
+  // Let entrance fades finish: axe measures contrast at the current, partly transparent, opacity.
+  await page.waitForTimeout(800);
   const results = await new AxeBuilder({ page }).withTags(["wcag2a", "wcag2aa", "wcag21a", "wcag21aa", "wcag22aa"]).analyze();
   const summary = results.violations.map((v) => `${v.id}: ${v.nodes.map((n) => n.target.join(" ")).join(", ")}`);
   expect(summary).toEqual([]);
@@ -25,4 +27,14 @@ export async function expectNoAxeViolations(page: Page): Promise<void> {
 export async function expectNoHorizontalScroll(page: Page): Promise<void> {
   const overflow = await page.evaluate(() => document.documentElement.scrollWidth - document.documentElement.clientWidth);
   expect(overflow).toBeLessThanOrEqual(0);
+}
+
+/** No scroll region may scroll sideways either (tables and code blocks have their own labelled containers). */
+export async function expectNoSidewaysRegions(page: Page): Promise<void> {
+  const offenders = await page.evaluate(() =>
+    Array.from(document.querySelectorAll<HTMLElement>('[role="region"]'))
+      .filter((el) => !el.closest("[data-wide]") && el.scrollWidth - el.clientWidth > 1)
+      .map((el) => el.getAttribute("aria-label") ?? el.tagName),
+  );
+  expect(offenders).toEqual([]);
 }

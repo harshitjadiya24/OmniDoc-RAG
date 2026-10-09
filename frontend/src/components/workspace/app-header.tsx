@@ -6,7 +6,7 @@ import { Wordmark } from "@/components/ui/logo";
 import { ThemeToggle } from "@/components/ui/theme-toggle";
 import { useHeaderHeight } from "@/hooks/use-header-height";
 
-/** Compact workspace bar. Phase 5 adds the chat switcher, settings and account menu here. */
+/** Compact workspace bar: brand, palette trigger, account and theme. */
 export function AppHeader({ children }: { children?: React.ReactNode }) {
   const ref = React.useRef<HTMLElement>(null);
   useHeaderHeight(ref);

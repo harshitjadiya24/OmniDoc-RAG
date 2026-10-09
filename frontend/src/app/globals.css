@@ -21,7 +21,7 @@
   --on-inverse: #f5f2eb;
 
   --verified-fill: #3ddc97;
-  --verified-text: #0b7a4b;
+  --verified-text: #08693f;
   --verified-wash: rgb(61 220 151 / 0.14);
   --on-verified: #04150d;
   --partial-fill: #f5b840;
@@ -286,4 +286,67 @@
 ::view-transition-new(root) {
   animation: none;
   mix-blend-mode: normal;
+}
+
+/* Long-form text: document summaries and answers. */
+.prose-doc {
+  font-size: 15px;
+  line-height: 1.7;
+  color: var(--ink);
+  overflow-wrap: anywhere;
+}
+.prose-doc > :first-child {
+  margin-top: 0;
+}
+.prose-doc > :last-child {
+  margin-bottom: 0;
+}
+.prose-doc p,
+.prose-doc ul,
+.prose-doc ol {
+  margin: 0 0 0.85em;
+}
+.prose-doc ul,
+.prose-doc ol {
+  padding-left: 1.25em;
+}
+.prose-doc li {
+  margin: 0.3em 0;
+}
+.prose-doc li::marker {
+  color: var(--ink-subtle);
+}
+.prose-doc h1,
+.prose-doc h2,
+.prose-doc h3,
+.prose-doc h4 {
+  margin: 1.4em 0 0.5em;
+  font-size: 0.8rem;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--ink-muted);
+}
+.prose-doc strong {
+  font-weight: 600;
+}
+.prose-doc code {
+  font-family: var(--font-mono);
+  font-size: 0.88em;
+  padding: 0.1em 0.35em;
+  border-radius: 4px;
+  background: var(--surface-3);
+}
+.prose-doc blockquote {
+  margin: 0 0 0.85em;
+  padding-left: 0.9em;
+  border-left: 2px solid var(--line-strong);
+  color: var(--ink-muted);
+}
+
+.pdf-mark {
+  background: rgb(61 220 151 / 0.32);
+  mix-blend-mode: multiply;
+  border-bottom: 2px solid #1fa86f;
+  border-radius: 2px;
 }

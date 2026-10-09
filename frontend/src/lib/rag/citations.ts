@@ -7,7 +7,9 @@ import type { Source } from "@/lib/api/schemas";
  * Every repetition has its own separator, so matching stays linear even while
  * an unclosed citation is still streaming in.
  */
-const ID = String.raw`DOC-[0-9A-Fa-f]{8}`;
+// Real IDs are DOC- plus 8 hex digits. Models sometimes mistype them, so near-misses are
+// still parsed and then shown as unverified rather than slipping through as plain text.
+const ID = String.raw`DOC-[0-9A-Za-z]{4,12}`;
 const PAGE = String.raw`\s*,\s*p(?:age|p)?\.?\s*\d+`;
 const REF = `${ID}(?:${PAGE})?`;
 const GROUP_SOURCE = String.raw`\[(${REF}(?:\s*;\s*${REF})*)\]`;

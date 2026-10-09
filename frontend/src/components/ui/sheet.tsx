@@ -65,7 +65,7 @@ export function Sheet({ open, onOpenChange, side = "right", title, description, 
                   <div className="min-w-0">
                     <Dialog.Title className="m-0 text-base font-semibold break-anywhere text-ink">{title}</Dialog.Title>
                     {description ? (
-                      <Dialog.Description className={cn("m-0 mt-1 text-sm text-ink-muted", hideDescription && "sr-only")}>{description}</Dialog.Description>
+                      <Dialog.Description className={cn("m-0 mt-1 text-sm text-ink-muted break-anywhere", hideDescription && "sr-only")}>{description}</Dialog.Description>
                     ) : (
                       <Dialog.Description className="sr-only">Details panel</Dialog.Description>
                     )}
