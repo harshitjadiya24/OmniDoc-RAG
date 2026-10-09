@@ -1,0 +1,22 @@
+[project]
+name = "regrag-backend"
+version = "1.0.0"
+requires-python = ">=3.12"
+
+[tool.ruff]
+line-length = 130
+target-version = "py312"
+include = ["src/**/*.py", "tests/**/*.py"]
+
+[tool.ruff.lint]
+select = ["E", "F", "I", "B", "UP", "SIM"]
+ignore = ["B008"]  # FastAPI's Depends()/File() defaults are the documented pattern
+
+[tool.ruff.lint.per-file-ignores]
+# Prompt text and month regexes read better unwrapped.
+"src/docqa/prompts.py" = ["E501"]
+"src/docqa/doctypes/metadata.py" = ["E501"]
+"tests/**" = ["E501"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]

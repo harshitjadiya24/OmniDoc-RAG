@@ -1,0 +1,4 @@
+# Optional: OpenTelemetry tracing (enabled when OTEL_EXPORTER_OTLP_ENDPOINT is set).
+opentelemetry-sdk
+opentelemetry-exporter-otlp-proto-http
+opentelemetry-instrumentation-fastapi

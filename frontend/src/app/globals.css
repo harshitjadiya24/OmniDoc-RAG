@@ -1,0 +1,289 @@
+@import "tailwindcss";
+
+@custom-variant dark (&:where(.dark, .dark *));
+
+/*
+ * Evidence Grade tokens. Fill colours (--*-fill) are for backgrounds, rings and
+ * glows; text colours (--*-text) are the AA-checked variants for small text.
+ * Contrast results live in docs/DESIGN.md.
+ */
+:root {
+  --bg: #f5f2eb;
+  --surface: #ffffff;
+  --surface-2: #fbfaf6;
+  --surface-3: #efebe2;
+  --line: rgb(14 16 20 / 0.1);
+  --line-strong: rgb(14 16 20 / 0.18);
+  --ink: #0e1014;
+  --ink-muted: #4a4f59;
+  --ink-subtle: #5f6570;
+  --inverse: #0e1014;
+  --on-inverse: #f5f2eb;
+
+  --verified-fill: #3ddc97;
+  --verified-text: #0b7a4b;
+  --verified-wash: rgb(61 220 151 / 0.14);
+  --on-verified: #04150d;
+  --partial-fill: #f5b840;
+  --partial-text: #8a5a00;
+  --partial-wash: rgb(245 184 64 / 0.16);
+  --unsupported-fill: #ff6b6b;
+  --unsupported-text: #b4232f;
+  --unsupported-wash: rgb(255 107 107 / 0.13);
+  --neutral-fill: #94a3b8;
+  --neutral-text: #4a5568;
+  --neutral-wash: rgb(148 163 184 / 0.16);
+  --superseded-fill: #e8a23b;
+  --superseded-text: #8f5200;
+  --superseded-wash: rgb(232 162 59 / 0.15);
+
+  --mark: rgb(61 220 151 / 0.28);
+  --glow: rgb(61 220 151 / 0.22);
+  --shadow: 0 1px 0 rgb(14 16 20 / 0.04), 0 12px 32px -16px rgb(14 16 20 / 0.18);
+  --grain-opacity: 0.035;
+  color-scheme: light;
+}
+
+.dark {
+  --bg: #0a0b0d;
+  --surface: #111317;
+  --surface-2: #171a1f;
+  --surface-3: #1f232a;
+  --line: rgb(255 255 255 / 0.08);
+  --line-strong: rgb(255 255 255 / 0.15);
+  --ink: #edeef0;
+  --ink-muted: #a3a8b3;
+  --ink-subtle: #868c98;
+  --inverse: #edeef0;
+  --on-inverse: #0a0b0d;
+
+  --verified-text: #4be3a2;
+  --verified-wash: rgb(61 220 151 / 0.12);
+  --partial-text: #f7c35e;
+  --partial-wash: rgb(245 184 64 / 0.12);
+  --unsupported-text: #ff8a8a;
+  --unsupported-wash: rgb(255 107 107 / 0.12);
+  --neutral-text: #aab4c3;
+  --neutral-wash: rgb(148 163 184 / 0.12);
+  --superseded-text: #f0b45c;
+  --superseded-wash: rgb(232 162 59 / 0.12);
+
+  --mark: rgb(61 220 151 / 0.24);
+  --glow: rgb(61 220 151 / 0.18);
+  --shadow: 0 1px 0 rgb(255 255 255 / 0.03) inset, 0 24px 48px -24px rgb(0 0 0 / 0.7);
+  --grain-opacity: 0.045;
+  color-scheme: dark;
+}
+
+@theme inline {
+  --color-bg: var(--bg);
+  --color-surface: var(--surface);
+  --color-surface-2: var(--surface-2);
+  --color-surface-3: var(--surface-3);
+  --color-line: var(--line);
+  --color-line-strong: var(--line-strong);
+  --color-ink: var(--ink);
+  --color-ink-muted: var(--ink-muted);
+  --color-ink-subtle: var(--ink-subtle);
+  --color-inverse: var(--inverse);
+  --color-on-inverse: var(--on-inverse);
+
+  --color-verified: var(--verified-fill);
+  --color-verified-text: var(--verified-text);
+  --color-verified-wash: var(--verified-wash);
+  --color-on-verified: var(--on-verified);
+  --color-partial: var(--partial-fill);
+  --color-partial-text: var(--partial-text);
+  --color-partial-wash: var(--partial-wash);
+  --color-unsupported: var(--unsupported-fill);
+  --color-unsupported-text: var(--unsupported-text);
+  --color-unsupported-wash: var(--unsupported-wash);
+  --color-neutral: var(--neutral-fill);
+  --color-neutral-text: var(--neutral-text);
+  --color-neutral-wash: var(--neutral-wash);
+  --color-superseded: var(--superseded-fill);
+  --color-superseded-text: var(--superseded-text);
+  --color-superseded-wash: var(--superseded-wash);
+  --color-mark: var(--mark);
+
+  --font-sans: var(--font-geist-sans), ui-sans-serif, system-ui, sans-serif;
+  --font-mono: var(--font-geist-mono), ui-monospace, monospace;
+  --font-display: var(--font-instrument-serif), ui-serif, Georgia, serif;
+
+  --radius-sm: 6px;
+  --radius-md: 8px;
+  --radius-lg: 10px;
+  --radius-xl: 14px;
+  --shadow-panel: var(--shadow);
+
+  --z-raised: 10;
+  --z-sticky: 20;
+  --z-header: 30;
+  --z-panel: 40;
+  --z-overlay: 50;
+  --z-popover: 60;
+  --z-toast: 70;
+  --z-tooltip: 80;
+
+  --animate-caret: caret 1s steps(2, start) infinite;
+  --animate-shimmer: shimmer 2.2s linear infinite;
+  --animate-pulse-ring: pulse-ring 1.6s var(--ease-out) infinite;
+
+  --ease-out: cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+@keyframes caret {
+  to {
+    visibility: hidden;
+  }
+}
+
+@keyframes shimmer {
+  from {
+    transform: translateX(-100%);
+  }
+  to {
+    transform: translateX(100%);
+  }
+}
+
+@keyframes pulse-ring {
+  0% {
+    transform: scale(0.8);
+    opacity: 0.7;
+  }
+  100% {
+    transform: scale(1.9);
+    opacity: 0;
+  }
+}
+
+@layer base {
+  html {
+    -webkit-text-size-adjust: 100%;
+    scroll-padding-top: calc(var(--header-h, 64px) + 16px);
+  }
+
+  body {
+    background: var(--bg);
+    color: var(--ink);
+    font-family: var(--font-sans);
+    font-feature-settings: "ss01", "cv11";
+    text-rendering: optimizeLegibility;
+  }
+
+  /* Film grain over the whole page, far below AA-affecting levels. */
+  body::before {
+    content: "";
+    position: fixed;
+    inset: 0;
+    z-index: 1;
+    pointer-events: none;
+    opacity: var(--grain-opacity);
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  }
+
+  h1,
+  h2,
+  h3 {
+    text-wrap: balance;
+  }
+
+  p {
+    text-wrap: pretty;
+  }
+
+  :focus-visible {
+    outline: 2px solid var(--verified-fill);
+    outline-offset: 2px;
+  }
+
+  ::selection {
+    background: var(--mark);
+    color: var(--ink);
+  }
+
+  .tabular {
+    font-variant-numeric: tabular-nums;
+  }
+
+  .break-anywhere {
+    overflow-wrap: anywhere;
+  }
+}
+
+@layer components {
+  /* Stacking above the grain layer. */
+  .app-root {
+    position: relative;
+    z-index: 2;
+  }
+
+  .hairline-grid {
+    background-image:
+      linear-gradient(to right, var(--line) 1px, transparent 1px),
+      linear-gradient(to bottom, var(--line) 1px, transparent 1px);
+    background-size: 64px 64px;
+  }
+
+  .eyebrow {
+    font-family: var(--font-mono);
+    font-size: 11.5px;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--ink-subtle);
+  }
+
+  /* Soft focus glow as an opacity-animated pseudo-element, never an animated box-shadow. */
+  .glow-ring {
+    position: relative;
+  }
+  .glow-ring::after {
+    content: "";
+    position: absolute;
+    inset: -1px;
+    border-radius: inherit;
+    pointer-events: none;
+    box-shadow:
+      0 0 0 1px var(--verified-fill),
+      0 0 24px var(--glow);
+    opacity: 0;
+    transition: opacity 240ms var(--ease-out);
+  }
+  .glow-ring:focus-within::after,
+  .glow-ring[data-active="true"]::after {
+    opacity: 1;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    scroll-behavior: auto !important;
+    transition-duration: 0.12s !important;
+  }
+}
+
+@media (prefers-contrast: more) {
+  :root,
+  .dark {
+    --line: var(--line-strong);
+    --ink-subtle: var(--ink-muted);
+    --grain-opacity: 0;
+  }
+}
+
+@media (forced-colors: active) {
+  body::before {
+    display: none;
+  }
+}
+
+::view-transition-old(root),
+::view-transition-new(root) {
+  animation: none;
+  mix-blend-mode: normal;
+}
