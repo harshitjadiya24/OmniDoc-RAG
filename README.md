@@ -8,7 +8,7 @@ OmniDoc is a retrieval-augmented generation (RAG) app for your own documents. Yo
 - **every citation is checked** by re-reading the cited page and scoring how much of the statement actually appears there (supported, partial or unsupported),
 - **missing evidence gets a refusal** instead of a confident guess.
 
-By default everything runs on your machine: local embeddings, a local reranker and a local language model through Ollama. Nothing is sent to a cloud service unless you add a Gemini key and choose it.
+By default everything runs on your machine: local embeddings, a local reranker and a local language model through Ollama. Nothing is sent to a cloud service unless you add an OpenRouter, Mistral, Groq or Gemini key and choose that model. If you'd rather not run a model locally, a free OpenRouter key is the quickest way to get answers (see [step 2](#2-choose-an-answer-model)).
 
 ---
 
@@ -63,10 +63,11 @@ The underlying task is **attributed (grounded) question answering over a closed,
 - Streaming answers over Server-Sent Events, with the pipeline stage shown live
 - Per-citation page checks, the closest matching sentence, and a summary for the whole answer
 - Multi-turn chats saved on the server
-- Answer models: local Ollama (default) or Google Gemini
+- Answer models: local Ollama (default), OpenRouter (free models, with automatic fallback when one is busy), Mistral, Groq or Google Gemini, chosen per question
 
 **Interface**
 - A product site at `/` explaining the system with labelled demos
+- An intro film that plays full screen once per visit (with sound when the browser allows it) and then loops muted on the landing page, with a separate cut for the light and dark themes
 - A workspace at `/app` with a library, the conversation and an evidence pane
 - A built-in PDF viewer that opens the cited page with the passage highlighted
 - Dark and light themes, keyboard shortcuts (⌘K / Ctrl+K command palette), and phone layouts
@@ -74,7 +75,8 @@ The underlying task is **attributed (grounded) question answering over a closed,
 
 **Operations**
 - Optional email and password accounts with a private library per user
-- Rate limits, restricted CORS, JSON request logs with request IDs, optional OpenTelemetry
+- Rate limits per user, plus a shared budget that mirrors Groq's free-tier quota so a question over it is refused up front with a retry time
+- Restricted CORS, JSON request logs with request IDs, optional OpenTelemetry
 - Docker images and a Compose file
 
 ---
@@ -87,7 +89,7 @@ The underlying task is **attributed (grounded) question answering over a closed,
 |---|---|---|
 | Python | 3.12 | Backend API |
 | Node.js | 22 | Frontend |
-| [Ollama](https://ollama.com) | recent | Local answer model (skip if you will only use Gemini) |
+| [Ollama](https://ollama.com) | recent | Local answer model (skip if you use a hosted model such as OpenRouter) |
 | Tesseract | optional | OCR for scanned PDFs (`brew install tesseract` or `apt install tesseract-ocr`) |
 
 ### 1. Get the code
@@ -97,14 +99,29 @@ git clone https://github.com/harshitjadiya24/OmniDoc-RAG.git
 cd OmniDoc-RAG
 ```
 
-### 2. Start a local model
+### 2. Choose an answer model
+
+Pick one. You can add the others later and switch per question.
+
+**Option A: OpenRouter (free key, nothing to install).**
+1. Create a key at [openrouter.ai/keys](https://openrouter.ai/keys) (no card needed).
+2. In [privacy settings](https://openrouter.ai/settings/privacy), allow free model endpoints. Without this, free models fail with "No endpoints found matching your data policy".
+3. Put the key in `backend/.env`:
+
+```bash
+cd backend
+printf 'LLM_PROVIDER=openrouter\nOPENROUTER_API_KEY=your-key\n' >> .env
+cd ..
+```
+
+Free models allow 50 requests a day on a new key (see [Using a hosted model](#using-a-hosted-model-instead-of-ollama)). The retrieved passages are sent to OpenRouter and the model's host.
+
+**Option B: Ollama (fully local and private).**
 
 ```bash
 ollama pull qwen3:1.7b
 ollama serve            # skip if the Ollama app is already running
 ```
-
-Prefer Gemini? Skip this step and see [Using Gemini instead of Ollama](#using-gemini-instead-of-ollama).
 
 ### 3. Start the backend
 
@@ -119,7 +136,7 @@ The first upload downloads the embedding model, and the first reranked question 
 
 ```bash
 curl http://localhost:8000/api/health        # {"status":"ok"}
-curl http://localhost:8000/llm/providers     # shows whether Ollama and the model are available
+curl http://localhost:8000/llm/providers     # which answer models are available, the default, and why any are not
 ```
 
 Interactive API docs are at http://localhost:8000/docs.
@@ -134,7 +151,7 @@ npm ci
 npm run dev
 ```
 
-Open **http://localhost:3000** for the product site and **http://localhost:3000/app** for the workspace.
+Open **http://localhost:3000** for the product site and **http://localhost:3000/app** for the workspace. The intro film plays on your first visit to the product site in a browser session; add `?intro` to the address to see it again.
 
 Locally there are no accounts: one user and one library stored in `backend/data/library`.
 
@@ -166,7 +183,7 @@ Type in the box at the bottom and press **Enter** (Shift+Enter adds a new line).
 | Retrieval: Hybrid / Dense / BM25 | How passages are found. Hybrid is the best default |
 | Rerank | A cross-encoder re-scores the candidates. Better ordering, about a second slower |
 | Query rewrite | The model suggests extra search keywords (keyword search only). A few seconds slower |
-| Answer model | Local Ollama or Gemini; unavailable models are disabled and say why |
+| Answer model | Local Ollama, OpenRouter, Mistral, Groq or Gemini; unavailable models are disabled and say why |
 
 While the answer streams you see the four stages (*Plan, Retrieve, Rank, Draft*). **Esc** or **Stop** cancels.
 
@@ -215,7 +232,7 @@ Every answer is saved to the current chat. The chat name at the top of the conve
 4. **Chunk** (`chunking.py`): packs text into passages of about 700 to 1,100 characters (depending on type) under the nearest heading, with a small overlap. Tables split by row with the header repeated. Research papers stop at *References*.
 5. **Metadata** (`doctypes/metadata.py`): best-effort title, date, issuer and reference number, labelled *Detected from the PDF* until edited.
 6. **Embed and index** (`engine.py`): passages are embedded with `BAAI/bge-small-en-v1.5` into a Chroma collection and stored in SQLite (documents, passages and full page text). The original PDF is kept for the viewer and for re-chunking.
-7. **Summarize** (`summarize.py`): one model call writes a summary and four example questions. If no model is available the document still works.
+7. **Summarize** (`summarize.py`): two model calls with the default answer model. The four example questions come first (they are short), then the summary, so a rate-limited provider only delays the summary and a failed summary never loses the questions. A summary that hits the model's output cap is trimmed back to its last complete paragraph. If no model is available, or the call fails, the document still works without them.
 8. **Lineage** (`doctypes/lineage.py`): computed on read from each document's *supersedes* list; the newer document wins.
 
 ### Asking
@@ -237,7 +254,7 @@ done     { refused, usage, citations }      or      error { message }
 2. **Retrieve** (`engine.py`, `retrieval.py`): BM25 (with Lucene's non-negative IDF, so keyword search still works in a one-document library) and dense search each produce a ranked list; reciprocal rank fusion adds `1 / (60 + rank)` from each list. Multi and compare search each document separately so a long document can't crowd out the others.
 3. **Rerank** (`rerank.py`, optional): the cross-encoder scores question and passage together and reorders the top candidates.
 4. **Prompt** (`prompts.py`): the model gets only the excerpts, each headed with `[DOC-…, p. N] | Title | Type | Date | Status | Section`, plus rules: use only the excerpts, cite every statement, refuse with a fixed sentence if the answer isn't there, plus extra rules for each document type present (for example "say which party each obligation binds" for contracts). Earlier turns in the chat are included.
-5. **Stream** (`stream.py`): tokens are forwarded as they arrive. Hidden reasoning tags from local models are stripped, and a model failure ends the stream with an `error` event carrying the provider's reason.
+5. **Stream** (`stream.py`): tokens are forwarded as they arrive. Hidden reasoning tags from local models are stripped, and a model failure (for example a provider's rate limit) ends the stream with an `error` event carrying the provider's reason. Text that already arrived is kept.
 6. **Verify** (`verify.py`): for each citation, the statement before it is reduced to its content words (stopwords removed) and compared with the full text of the cited page. Coverage of 70% or more is **supported**, 40% or more is **partial**, below that **unsupported**. A page with no text is **not_found**, and statements with fewer than two content words are **unchecked**.
 
 > The page check is word overlap, not proof of meaning. It catches citations to the wrong page and statements the page doesn't mention, but it cannot detect negation or paraphrase: "Interest is payable" scores as supported against a page saying "Interest is not payable". The interface says so wherever verdicts appear.
@@ -263,9 +280,20 @@ The backend reads environment variables or `backend/.env` (see `backend/src/conf
 
 | Setting | Default | Purpose |
 |---|---|---|
-| `LLM_PROVIDER` | `ollama` | `ollama` or `gemini` |
+| `LLM_PROVIDER` | `ollama` | `ollama`, `openrouter`, `mistral`, `groq` or `gemini` |
+| `OPENROUTER_API_KEY` | empty | Enables OpenRouter |
+| `OPENROUTER_MODEL` | `nvidia/nemotron-3-super-120b-a12b:free` | OpenRouter model (`:free` models cost nothing) |
+| `OPENROUTER_FALLBACK_MODELS` | `google/gemma-4-31b-it:free,google/gemma-4-26b-a4b-it:free` | Tried in the same request when the model is busy upstream (max 3 models in total) |
+| `MISTRAL_API_KEY` | empty | Enables Mistral |
+| `MISTRAL_MODEL` | `mistral-small-latest` | Mistral model |
 | `OLLAMA_MODEL` | `qwen3:1.7b` | Local model name (must be pulled) |
 | `OLLAMA_BASE_URL` | `http://localhost:11434` | Ollama address |
+| `GROQ_API_KEY` | empty | Enables Groq |
+| `GROQ_MODEL` | `qwen/qwen3.8-27b` | Groq model |
+| `GROQ_TOKENS_PER_MINUTE` | `8000` | Groq free-tier token budget the app enforces (prompt + output cap per request); `0` turns the budget off |
+| `GROQ_OUTPUT_TOKENS_PER_MINUTE` | `1000` | Groq free-tier output budget (output used in the last minute + the next request's cap) |
+| `GROQ_REQUESTS_PER_DAY` | `1000` | Groq free-tier daily request cap |
+| `GROQ_MAX_TOKENS` | `1000` | Output cap for Groq requests (cannot exceed the output budget) |
 | `GEMINI_API_KEY` | empty | Enables Gemini |
 | `GEMINI_MODEL` | `gemini-3.1-pro` | Gemini model |
 | `LLM_MAX_TOKENS` | `2048` | Hard cap on answer length |
@@ -290,15 +318,37 @@ The frontend reads these at build time (put them in `frontend/.env.local`):
 | `NEXT_PUBLIC_API_URL` | `http://localhost:8000` | Backend address |
 | `NEXT_PUBLIC_GITHUB_URL` | unset | Shows a GitHub link in the header and footer |
 
-### Using Gemini instead of Ollama
+### The intro film
+
+The landing page plays `frontend/public/film/omnidoc-intro-dark.mp4` in the dark theme and `omnidoc-intro-light.mp4` in the light theme (paths in `frontend/src/lib/film.ts`). Switching theme swaps the cut. To replace a film, overwrite the file with an H.264/AAC MP4 whose index is at the start of the file, for example:
+
+```bash
+ffmpeg -i film.mp4 -vcodec libx264 -crf 26 -preset slow -acodec aac -b:a 128k -movflags +faststart \
+  frontend/public/film/omnidoc-intro-dark.mp4
+```
+
+If a file is missing, the intro closes itself and the film section hides; the rest of the site is unaffected. Visitors with reduced motion turned on don't get the full-screen intro automatically, and the landing-page loop doesn't autoplay for them.
+
+### Using a hosted model instead of Ollama
+
+**OpenRouter** (the easiest free option). Its `:free` models need only a free key from [openrouter.ai/keys](https://openrouter.ai/keys), no card, and you must allow free endpoints in [privacy settings](https://openrouter.ai/settings/privacy). A key that has never bought credits gets 20 requests a minute and 50 a day; each question is one request (two with query rewrite) and each upload two (example questions and summary). A one-time purchase of 10 credits raises the daily limit to 1,000.
+
+- The default model, `nvidia/nemotron-3-super-120b-a12b:free`, was chosen because it follows the `[DOC-…, p. N]` citation format and starts answering in under a second. Its answers are short.
+- Free models are often "temporarily rate-limited upstream". `OPENROUTER_FALLBACK_MODELS` lists models OpenRouter tries next within the same request (three models at most, including the main one).
+- Reasoning is switched off in each request: reasoning tokens would count against the answer's output cap and delay the first word.
+- The list of free models changes; see [openrouter.ai/models?q=free](https://openrouter.ai/models?q=free). Some free models are restricted to agent apps and return 403.
 
 ```bash
 cd backend
-echo "GEMINI_API_KEY=your-key" >> .env
-echo "LLM_PROVIDER=gemini" >> .env     # optional: makes Gemini the default
+echo "OPENROUTER_API_KEY=your-key" >> .env
+echo "LLM_PROVIDER=openrouter" >> .env  # optional: makes OpenRouter the default
 ```
 
-Restart the API. With a key set, both models appear in the settings menu and can be chosen per question. Choosing Gemini sends the retrieved passages to Google.
+**Mistral** (`MISTRAL_API_KEY`, `LLM_PROVIDER=mistral`, keys at [console.mistral.ai](https://console.mistral.ai)), **Groq** (`GROQ_API_KEY`, `LLM_PROVIDER=groq`, keys at [console.groq.com/keys](https://console.groq.com/keys)) and **Gemini** (`GEMINI_API_KEY`, `LLM_PROVIDER=gemini`, keys at [aistudio.google.com/apikey](https://aistudio.google.com/apikey)) work the same way. Some new Google projects are refused on the free tier with 403 "Your project has been denied access"; that is a restriction on the Google project, not on this app. Free tiers may use what you send to improve their models: don't use them for confidential documents.
+
+Restart the API. With a key set, each configured model appears in the settings menu and can be chosen per question. Choosing a hosted model sends the retrieved passages to that provider; free tiers have daily rate limits.
+
+**Groq's free tier** allows about one answer every 15-20 seconds (its output-token limit is 1,000 per minute and each request reserves its full output cap), and an upload's summary can use up a whole minute. The API tracks the same budget for the whole key: a question that would exceed it gets a 429 with `Retry-After` and "The Groq free-tier limit is used up for now. Try again in N seconds." before any work starts, and upload summaries wait for room instead of failing. The budget lives in the API process, so run one worker.
 
 ### Using a different Ollama model
 
@@ -315,7 +365,7 @@ Larger models follow the citation format more reliably than the 1.7B default.
 
 ```bash
 cp .env.example .env
-# edit .env: set SECRET_KEY (openssl rand -hex 32) and, if you want Gemini, GEMINI_API_KEY
+# edit .env: set SECRET_KEY (openssl rand -hex 32) and, if you want a hosted model, OPENROUTER_API_KEY, MISTRAL_API_KEY, GROQ_API_KEY or GEMINI_API_KEY
 docker compose up --build
 ```
 
@@ -386,18 +436,19 @@ An empty `document_ids` searches every document. `task: "compare"` needs exactly
 │   │   │   ├── verify.py       citation page checks
 │   │   │   ├── summarize.py    summary and example questions
 │   │   │   ├── chats.py, jobs.py, store.py, embed.py, textutil.py
-│   │   ├── llm/            Ollama and Gemini providers
+│   │   ├── llm/            providers.py (Ollama and hosted models), quota.py (Groq free-tier budget)
 │   │   ├── auth/           users and signed sessions
 │   │   └── observability/  JSON logs and OpenTelemetry
-│   ├── tests/              pytest suite
+│   ├── tests/              pytest suite (conftest.py keeps tests off hosted models)
 │   └── Dockerfile
 ├── frontend/
 │   ├── src/
 │   │   ├── app/            routes: (site) product page, app/ workspace
-│   │   ├── components/     landing/, workspace/ (library, conversation, evidence, pdf, account), ui/
+│   │   ├── components/     landing/, film/ (intro film), workspace/ (library, conversation, evidence, pdf, account), ui/
 │   │   ├── lib/api/        typed API client, SSE stream, zod schemas
 │   │   ├── lib/rag/        citation parsing, check matching, PDF highlighting
 │   │   └── stores/         zustand state (conversation, library, chats, evidence, settings)
+│   ├── public/film/        intro films, one per theme
 │   ├── tests/              vitest unit tests and Playwright end-to-end tests
 │   ├── docs/               ARCHITECTURE.md, DESIGN.md
 │   └── Dockerfile
@@ -412,7 +463,8 @@ More detail on the frontend: [frontend/docs/ARCHITECTURE.md](frontend/docs/ARCHI
 ## Testing and CI
 
 ```bash
-# Backend: lint and tests (no model or network needed; tests use fake models)
+# Backend: lint and tests (no model or network needed; tests use fake models and
+# ignore any API keys in backend/.env, so they never spend a free-tier quota)
 cd backend
 .venv/bin/ruff check . && .venv/bin/python -m pytest
 
@@ -434,13 +486,19 @@ GitHub Actions (`.github/workflows/`) runs both suites and builds the Docker ima
 |---|---|
 | Workspace says **"The API isn't answering"** | Start the backend on port 8000, or set `NEXT_PUBLIC_API_URL` to where it runs |
 | Browser console shows a CORS error | Add your frontend address to `CORS_ORIGINS` and restart the API |
-| Model shows as unavailable in settings | `ollama serve` is not running, or the model isn't pulled: `ollama pull qwen3:1.7b` |
-| Asking returns a 422 | The chosen provider isn't configured (for example Gemini without `GEMINI_API_KEY`), or Compare doesn't have exactly two documents |
+| Model shows as unavailable in settings | Ollama: `ollama serve` is not running, or the model isn't pulled (`ollama pull qwen3:1.7b`). Hosted models: the key isn't set in `backend/.env`, or the API wasn't restarted after setting it |
+| Asking returns a 422 | The chosen provider isn't configured (for example Groq without `GROQ_API_KEY`), or Compare doesn't have exactly two documents |
 | Upload fails with "No selectable text… OCR is not available" | Install Tesseract, or the PDF is image-only with OCR turned off (`OCR_MAX_PAGES=0`) |
 | "View PDF" says the original isn't stored | The document was uploaded before originals were kept; upload it again |
 | Answers are slow | The local model runs on your CPU or GPU; turn off rerank and query rewrite, or use a smaller or faster model |
 | Citations often show as **Unverified** | Small local models sometimes mistype IDs or pages; a larger model follows the format better |
-| A 429 error | Rate limit reached (`ASK_PER_MINUTE`, `UPLOADS_PER_HOUR`); wait or raise the limit |
+| "Too many requests. Try again in N seconds." | The per-user limit (`ASK_PER_MINUTE`, `UPLOADS_PER_HOUR`); wait, or raise the limit |
+| "The Groq free-tier limit is used up for now. Try again in N seconds." | Groq's per-minute budget is spent (an upload's summary can use a whole minute). Wait, or switch the answer model |
+| OpenRouter: "temporarily rate-limited upstream" | The free model is busy for everyone. Retry, or add another free model to `OPENROUTER_FALLBACK_MODELS` |
+| OpenRouter: rate limit on free models per day | The 50-requests-a-day free allowance is used up; it resets daily (1,000 a day after a one-time 10-credit purchase) |
+| OpenRouter: "No endpoints found matching your data policy" | Allow free model endpoints in [OpenRouter's privacy settings](https://openrouter.ai/settings/privacy) |
+| Gemini: 403 "Your project has been denied access" | Google has restricted the project's free tier; use another provider or set up billing in AI Studio |
+| A document has no summary or example questions | The model was unavailable or rate-limited while it was processed; upload it again once the model works |
 
 ---
 
@@ -449,4 +507,5 @@ GitHub Actions (`.github/workflows/`) runs both suites and builds the Docker ima
 - The page check measures word overlap, not meaning. It can't detect negation, paraphrase or reasoning errors. Read the passage when it matters.
 - Answers are generated by a language model and can be wrong even when cited. This is not legal or financial advice.
 - Document type detection and metadata extraction are rule-based and best effort; correct them in the document details.
-- One API worker by design; horizontal scaling would need shared storage for rate limits, jobs and vectors.
+- One API worker by design; horizontal scaling would need shared storage for rate limits, the Groq budget, jobs and vectors.
+- Free hosted tiers are rate-limited (OpenRouter: 50 requests a day on a new key; Groq: about one answer every 15-20 seconds) and may use what you send for training.

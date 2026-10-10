@@ -1,6 +1,7 @@
 import { AskPipeline } from "@/components/landing/ask-pipeline";
 import { DocTypes } from "@/components/landing/doc-types";
 import { FactsStrip } from "@/components/landing/facts-strip";
+import { FilmSection } from "@/components/landing/film-section";
 import { Faq } from "@/components/landing/faq";
 import { FinalCta } from "@/components/landing/final-cta";
 import { Hero } from "@/components/landing/hero";
@@ -16,6 +17,7 @@ export default function LandingPage() {
     <>
       <SmoothScroll />
       <Hero />
+      <FilmSection />
       <FactsStrip />
       <Problems />
       <Ingestion />

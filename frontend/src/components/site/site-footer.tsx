@@ -41,7 +41,7 @@ export function SiteFooter() {
             <li>FastAPI · SQLite · Chroma</li>
             <li>bge-small · BM25 · RRF</li>
             <li>MiniLM cross-encoder</li>
-            <li>Ollama or Gemini</li>
+            <li>Ollama or a hosted model</li>
             {GITHUB_URL && (
               <li>
                 <a href={GITHUB_URL} target="_blank" rel="noopener noreferrer" className="hover:text-ink">

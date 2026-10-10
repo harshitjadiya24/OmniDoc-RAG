@@ -60,7 +60,7 @@ class AskRequest(BaseModel):
     task: Literal["ask", "compare"] = "ask"
     # rewrite adds model-suggested keywords to the BM25 query; provider picks the answer model.
     rewrite: bool = False
-    provider: Literal["ollama", "gemini"] | None = None
+    provider: Literal["ollama", "openrouter", "mistral", "groq", "gemini"] | None = None
     # Optional chat ID to continue a conversation thread.
     chat_id: str | None = None
 
@@ -75,7 +75,7 @@ def ask_stream(req: AskRequest, user: User | None = Depends(optional_user)) -> S
     """Stream the stage-aware, flattened evidence contract used by the UI."""
     from src.api.library import library_for
     from src.docqa.stream import stream_library_events
-    from src.llm.providers import ProviderUnavailable, chat_model, model_label
+    from src.llm.providers import ProviderUnavailable, QuotaExceeded, chat_model, check_quota, model_label
 
     if user is None:
         raise HTTPException(401, "Sign in to ask about your documents.", headers={"WWW-Authenticate": "Bearer"})
@@ -91,8 +91,13 @@ def ask_stream(req: AskRequest, user: User | None = Depends(optional_user)) -> S
         rewriter = chat_model(provider, settings, quick=True)
     except ProviderUnavailable as exc:
         raise HTTPException(422, str(exc)) from exc
+    try:
+        check_quota(provider, settings)
+    except QuotaExceeded as exc:
+        raise HTTPException(429, str(exc), headers={"Retry-After": str(exc.retry_after)}) from exc
 
     from src.api.chats import chat_store_for
+
     history = []
     if req.chat_id:
         chat = chat_store_for(user.id).get(req.chat_id)

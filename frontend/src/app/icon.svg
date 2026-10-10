@@ -1,0 +1,18 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32">
+  <style>
+    .tile { fill: #0e1014; }
+    .page { fill: #f5f2eb; }
+    .fold { fill: none; stroke: #0e1014; }
+    .tick { fill: none; stroke: #3ddc97; }
+    @media (prefers-color-scheme: dark) {
+      .tile { fill: #edeef0; }
+      .page { fill: #0a0b0d; }
+      .fold { stroke: #edeef0; }
+      .tick { stroke: #1fa86f; }
+    }
+  </style>
+  <rect class="tile" x="0" y="0" width="32" height="32" rx="8"/>
+  <path class="page" d="M9.5 6h9.2L23 10.3V25a1 1 0 0 1-1 1H9.5a1 1 0 0 1-1-1V7a1 1 0 0 1 1-1Z"/>
+  <path class="fold" d="M18.7 6v3.3a1 1 0 0 0 1 1H23" stroke-width="1.3"/>
+  <path class="tick" d="m11.8 17.6 2.7 2.7 5.3-5.5" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/>
+</svg>

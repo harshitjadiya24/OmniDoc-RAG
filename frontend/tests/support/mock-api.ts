@@ -98,6 +98,9 @@ export async function mockApi(page: Page, options: Options = {}) {
         default: "ollama",
         providers: [
           { id: "ollama", label: "Local (Ollama)", model: "qwen3:1.7b", available: true, reason: null, local: true },
+          { id: "openrouter", label: "OpenRouter", model: "nvidia/nemotron-3-super-120b-a12b:free", available: false, reason: "Set OPENROUTER_API_KEY on the server to enable.", local: false },
+          { id: "mistral", label: "Mistral", model: "mistral-small-latest", available: false, reason: "Set MISTRAL_API_KEY on the server to enable.", local: false },
+          { id: "groq", label: "Groq", model: "qwen/qwen3.8-27b", available: false, reason: "Set GROQ_API_KEY on the server to enable.", local: false },
           { id: "gemini", label: "Gemini (Google)", model: "gemini-3.1-pro", available: false, reason: "Set GEMINI_API_KEY on the server to enable.", local: false },
         ],
       });

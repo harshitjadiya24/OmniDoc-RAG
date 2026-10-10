@@ -1,0 +1,627 @@
+- generic [ref=e1]:
+  - link "Skip to content" [ref=e2] [cursor=pointer]:
+    - /url: "#main"
+  - generic [ref=e3]:
+    - dialog "OmniDoc intro film" [ref=e4]:
+      - generic [ref=e8]:
+        - paragraph [ref=e9]: OmniDoc · intro film
+        - generic [ref=e15]:
+          - button "Sound on" [ref=e16]
+          - button "Skip intro" [active] [ref=e21]
+    - banner [ref=e25]:
+      - generic [ref=e26]:
+        - link "OmniDoc home" [ref=e27] [cursor=pointer]:
+          - /url: /
+          - generic [ref=e28]: OmniDoc rag
+        - navigation "Primary" [ref=e35]:
+          - list [ref=e36]:
+            - listitem [ref=e37]:
+              - link "Why" [ref=e38] [cursor=pointer]:
+                - /url: /#problem
+            - listitem [ref=e39]:
+              - link "How it works" [ref=e40] [cursor=pointer]:
+                - /url: /#pipeline
+            - listitem [ref=e41]:
+              - link "Verification" [ref=e42] [cursor=pointer]:
+                - /url: /#verification
+            - listitem [ref=e43]:
+              - link "Modes" [ref=e44] [cursor=pointer]:
+                - /url: /#modes
+            - listitem [ref=e45]:
+              - link "FAQ" [ref=e46] [cursor=pointer]:
+                - /url: /#faq
+        - generic [ref=e47]:
+          - link "GitHub" [ref=e48] [cursor=pointer]:
+            - /url: https://github.com/harshitjadiya24/OmniDoc-RAG
+          - button "Switch to light theme" [ref=e52]
+          - link "Open workspace" [ref=e59] [cursor=pointer]:
+            - /url: /app
+    - main [ref=e60]:
+      - region [ref=e61]:
+        - generic [ref=e63]:
+          - generic [ref=e64]:
+            - paragraph [ref=e66]:
+              - generic [ref=e67]: Grounded RAG
+              - text: for PDFs you upload
+            - heading [level=1] [ref=e69]:
+              - text: Answers that
+              - emphasis [ref=e70]: show their work.
+            - paragraph [ref=e72]: Ask contracts, papers, reports and regulations in plain English. Each statement cites the page it came from, each citation is checked against that page, and when the evidence isn’t there you get a refusal, not a guess.
+            - generic [ref=e73]:
+              - link "Open the workspace" [ref=e74] [cursor=pointer]:
+                - /url: /app
+              - link "How citations are checked" [ref=e77] [cursor=pointer]:
+                - /url: /#verification
+            - list [ref=e79]:
+              - listitem [ref=e80]: Every statement cites a page
+              - listitem [ref=e82]: Every citation is page-checked
+              - listitem [ref=e84]: No evidence, no answer
+          - figure [ref=e89]:
+            - generic [ref=e90]:
+              - generic [ref=e95]: Sample replay · scripted, not your documents
+              - button "Replay the demo" [ref=e97]
+            - generic [aria-hidden] [ref=e101]:
+              - paragraph [ref=e103]: When do I get my deposit back, and can I keep a cat?
+              - list [ref=e104]:
+                - listitem [ref=e105]:
+                  - generic [ref=e106]: Plan
+                - listitem [ref=e110]:
+                  - generic [ref=e111]: Retrieve
+                - listitem [ref=e115]:
+                  - generic [ref=e116]: Rank
+                - listitem [ref=e120]:
+                  - generic [ref=e121]: Draft
+              - paragraph [ref=e125]
+            - paragraph [ref=e126]: A scripted example. The question “When do I get my deposit back, and can I keep a cat?” is answered from a fictional lease. Two citations are supported by their pages and one, about pets, is only partly supported.
+      - region [ref=e127]:
+        - generic [ref=e129]:
+          - generic [ref=e130]:
+            - generic [ref=e131]:
+              - paragraph [ref=e132]: The film
+              - heading [level=2] [ref=e133]:
+                - text: From upload
+                - emphasis [ref=e134]: to proof.
+            - button "Watch with sound" [ref=e135]
+          - figure [ref=e141]:
+            - generic "OmniDoc intro film, playing without sound" [ref=e142]
+            - generic:
+              - generic: Product film · muted loop
+              - button "Play film" [ref=e143]
+      - region "The system in numbers" [ref=e146]:
+        - list [ref=e147]:
+          - listitem [ref=e148]:
+            - generic [ref=e149]: "4"
+            - generic [ref=e150]: streamed pipeline stages
+            - generic [ref=e151]: plan · retrieve · rank · draft
+          - listitem [ref=e152]:
+            - generic [ref=e153]: "3"
+            - generic [ref=e154]: retrieval modes
+            - generic [ref=e155]: BM25, dense, hybrid RRF
+          - listitem [ref=e156]:
+            - generic [ref=e157]: "5"
+            - generic [ref=e158]: citation verdicts
+            - generic [ref=e159]: supported to page missing
+          - listitem [ref=e160]:
+            - generic [ref=e161]: "6"
+            - generic [ref=e162]: document types
+            - generic [ref=e163]: each with its own chunking
+          - listitem [ref=e164]:
+            - generic [ref=e165]: "0"
+            - generic [ref=e166]: documents sent to a cloud
+            - generic [ref=e167]: on the default local stack
+      - region [ref=e168]:
+        - generic [ref=e169]:
+          - generic [ref=e170]:
+            - paragraph [ref=e171]:
+              - generic [ref=e172]: "01"
+              - text: The problem
+            - heading [level=2] [ref=e174]:
+              - text: Plausible is not
+              - emphasis [ref=e175]: the same as true.
+            - paragraph [ref=e176]: Retrieval-augmented generation is supposed to ground a model in your documents. In practice four things go wrong, and each one is designed out here.
+          - list [ref=e178]:
+            - listitem [ref=e179]:
+              - heading "Fluent answers you can’t check" [level=3] [ref=e184]
+              - paragraph [ref=e185]: Ask a chatbot for a contract’s notice period and you get a confident sentence with nothing behind it.
+              - paragraph [ref=e186]:
+                - generic [ref=e188]: The model may only use retrieved excerpts and must cite document and page. Then each cited page is re-read and the claim scored against it.
+            - listitem [ref=e189]:
+              - heading "Systems that never say “I don’t know”" [level=3] [ref=e197]
+              - paragraph [ref=e198]: Most RAG demos answer something no matter what was retrieved.
+              - paragraph [ref=e199]:
+                - generic [ref=e201]: No passages means no model call and a refusal. If the model itself finds no evidence, the refusal is detected and shown calmly, not dressed up as an answer.
+            - listitem [ref=e202]:
+              - heading "One clause in three hundred pages" [level=3] [ref=e208]
+              - paragraph [ref=e209]: Keyword search needs the exact words. Semantic search misses “Clause 4.2.1” and “₹50,000”.
+              - paragraph [ref=e210]:
+                - generic [ref=e212]: BM25 and dense vectors run together and are fused with reciprocal rank fusion; a cross-encoder can re-score the top of the list.
+            - listitem [ref=e213]:
+              - heading "Old versions quoted as current" [level=3] [ref=e221]
+              - paragraph [ref=e222]: A 2016 direction replaced in 2025 still matches your question perfectly.
+              - paragraph [ref=e223]:
+                - generic [ref=e225]: Documents declare what they supersede. Superseded excerpts are labelled in the prompt and in the UI, and the model is told to prefer the replacement.
+      - region [ref=e226]:
+        - generic [ref=e227]:
+          - generic [ref=e228]:
+            - paragraph [ref=e229]:
+              - generic [ref=e230]: "02"
+              - text: Ingestion
+            - heading [level=2] [ref=e232]:
+              - text: From a PDF to
+              - emphasis [ref=e233]: citable passages.
+            - paragraph [ref=e234]: Uploading starts a background job you can watch stage by stage. By the end, every passage knows its page and section, and every page is kept for checking.
+          - generic [ref=e236]:
+            - generic [ref=e237]:
+              - generic [ref=e240]:
+                - generic [ref=e241]: HARBOUR LANE LEASE · CONFIDENTIAL
+                - generic [ref=e242]:
+                  - generic [ref=e243]: Residential lease agreement
+                  - generic [ref=e244]: Ref. HL/2025/014 · 3 March 2025
+                - generic [ref=e245]:
+                  - generic [ref=e246]:
+                    - paragraph [ref=e247]: 4. Security deposit
+                    - paragraph [ref=e248]:
+                      - mark [ref=e249]: This agreement
+                      - text: binds
+                      - mark [ref=e250]: the parties
+                      - text: . The deposit is refunded within 30 days.
+                    - generic [ref=e255]: text · p.4
+                  - generic [ref=e256]:
+                    - generic [ref=e257]:
+                      - generic [ref=e258]: Item
+                      - generic [ref=e259]: Amount
+                      - generic [ref=e260]: Due
+                      - generic [ref=e261]: Deposit
+                      - generic [ref=e262]: £1,200
+                      - generic [ref=e263]: On signing
+                      - generic [ref=e264]: Rent
+                      - generic [ref=e265]: £950
+                      - generic [ref=e266]: Monthly
+                    - generic [ref=e267]: table · p.4
+                  - generic [ref=e268]:
+                    - paragraph [ref=e269]:
+                      - text: "5."
+                      - mark [ref=e270]: Termination
+                    - generic [ref=e276]: text · p.4
+                - generic [ref=e277]: Page 4 of 12
+              - paragraph [ref=e278]:
+                - generic [ref=e279]: Showing step
+                - text: 01 / 08 · Extract
+            - list [ref=e280]:
+              - listitem [ref=e281]:
+                - button "01 Extract PyMuPDF reads every page in layout order and keeps the page number on each block. Ruled tables become rows; image-only pages are OCRed with Tesseract. backend/src/docqa/extract.py" [pressed] [ref=e282]:
+                  - generic [ref=e283]:
+                    - generic [ref=e284]: "01"
+                    - generic [ref=e285]: Extract
+                  - generic [ref=e286]: PyMuPDF reads every page in layout order and keeps the page number on each block. Ruled tables become rows; image-only pages are OCRed with Tesseract.
+                  - generic [ref=e287]: backend/src/docqa/extract.py
+              - listitem [ref=e288]:
+                - button "02 Clean Running headers, footers and watermarks repeated on most pages are dropped, along with table-of-contents leader lines. backend/src/docqa/doctypes/strategies.py" [ref=e289]:
+                  - generic [ref=e290]:
+                    - generic [ref=e291]: "02"
+                    - generic [ref=e292]: Clean
+                  - generic [ref=e293]: Running headers, footers and watermarks repeated on most pages are dropped, along with table-of-contents leader lines.
+                  - generic [ref=e294]: backend/src/docqa/doctypes/strategies.py
+              - listitem [ref=e295]:
+                - button "03 Classify Six document types are scored by distinctive phrases in the opening pages. The matched phrases are stored and shown, so the type explains itself. backend/src/docqa/doctypes/classify.py" [ref=e296]:
+                  - generic [ref=e297]:
+                    - generic [ref=e298]: "03"
+                    - generic [ref=e299]: Classify
+                  - generic [ref=e300]: Six document types are scored by distinctive phrases in the opening pages. The matched phrases are stored and shown, so the type explains itself.
+                  - generic [ref=e301]: backend/src/docqa/doctypes/classify.py
+              - listitem [ref=e302]:
+                - button "04 Chunk Text is packed into passages of 700 to 1,100 characters under their nearest heading. Each passage keeps its page and section, which become the citation. backend/src/docqa/chunking.py" [ref=e303]:
+                  - generic [ref=e304]:
+                    - generic [ref=e305]: "04"
+                    - generic [ref=e306]: Chunk
+                  - generic [ref=e307]: Text is packed into passages of 700 to 1,100 characters under their nearest heading. Each passage keeps its page and section, which become the citation.
+                  - generic [ref=e308]: backend/src/docqa/chunking.py
+              - listitem [ref=e309]:
+                - button "05 Metadata Title, date, issuer and reference number are detected from the first pages, labelled “Detected from the PDF”, and editable. backend/src/docqa/doctypes/metadata.py" [ref=e310]:
+                  - generic [ref=e311]:
+                    - generic [ref=e312]: "05"
+                    - generic [ref=e313]: Metadata
+                  - generic [ref=e314]: Title, date, issuer and reference number are detected from the first pages, labelled “Detected from the PDF”, and editable.
+                  - generic [ref=e315]: backend/src/docqa/doctypes/metadata.py
+              - listitem [ref=e316]:
+                - button "06 Embed & index Passages are embedded locally with bge-small into Chroma and tokenised for BM25. Full page text is kept so citations can be checked later. backend/src/docqa/engine.py" [ref=e317]:
+                  - generic [ref=e318]:
+                    - generic [ref=e319]: "06"
+                    - generic [ref=e320]: Embed & index
+                  - generic [ref=e321]: Passages are embedded locally with bge-small into Chroma and tokenised for BM25. Full page text is kept so citations can be checked later.
+                  - generic [ref=e322]: backend/src/docqa/engine.py
+              - listitem [ref=e323]:
+                - 'button "07 Summarise One model pass writes a summary and four questions the document can answer. Best effort: the document works without it. backend/src/docqa/summarize.py" [ref=e324]':
+                  - generic [ref=e325]:
+                    - generic [ref=e326]: "07"
+                    - generic [ref=e327]: Summarise
+                  - generic [ref=e328]: "One model pass writes a summary and four questions the document can answer. Best effort: the document works without it."
+                  - generic [ref=e329]: backend/src/docqa/summarize.py
+              - listitem [ref=e330]:
+                - button "08 Lineage A document can declare what it supersedes, by ID or reference number. The older one is marked superseded everywhere it appears. backend/src/docqa/doctypes/lineage.py" [ref=e331]:
+                  - generic [ref=e332]:
+                    - generic [ref=e333]: "08"
+                    - generic [ref=e334]: Lineage
+                  - generic [ref=e335]: A document can declare what it supersedes, by ID or reference number. The older one is marked superseded everywhere it appears.
+                  - generic [ref=e336]: backend/src/docqa/doctypes/lineage.py
+      - region [ref=e337]:
+        - generic [ref=e338]:
+          - generic [ref=e339]:
+            - paragraph [ref=e340]:
+              - generic [ref=e341]: "03"
+              - text: Asking
+            - heading [level=2] [ref=e343]:
+              - text: Every step of the answer
+              - emphasis [ref=e344]: is on the wire.
+            - paragraph [ref=e345]: A question is planned, retrieved, ranked and drafted, and the server streams each stage as it happens. The interface shows exactly what arrives, never a number it didn’t receive.
+          - generic [ref=e346]:
+            - generic [ref=e347]:
+              - generic [ref=e349]:
+                - generic [ref=e350]:
+                  - generic [ref=e351]: POST /ask/stream · text/event-stream
+                  - generic [ref=e352]: Replay
+                - list "Events in the order the server sends them" [ref=e354]
+                - paragraph [ref=e355]: Unknown or malformed events are dropped, never thrown. A close without done keeps the partial answer.
+                - generic [ref=e356]: Example document DOC-5A3F12C0.
+              - generic [ref=e358]:
+                - generic [ref=e359]:
+                  - paragraph [ref=e360]: Hybrid retrieval
+                  - generic [ref=e361]: Illustrative ranks · real formula
+                - generic [ref=e363]:
+                  - generic [ref=e364]:
+                    - generic [ref=e365]:
+                      - paragraph [ref=e366]: BM25 keywords
+                      - paragraph [ref=e367]: exact terms, numbers, IDs
+                    - list [ref=e368]:
+                      - listitem [ref=e369]:
+                        - generic [ref=e370]: "1"
+                        - generic [ref=e371]: "§4 Table: deposit £1,200, due on signing"
+                      - listitem [ref=e372]:
+                        - generic [ref=e373]: "2"
+                        - generic [ref=e374]: §4 Deposit refunded within 30 days
+                      - listitem [ref=e375]:
+                        - generic [ref=e376]: "3"
+                        - generic [ref=e377]: "§12 Definitions: “deposit”"
+                      - listitem [ref=e378]:
+                        - generic [ref=e379]: "4"
+                        - generic [ref=e380]: §5 Early termination and notice
+                  - generic [ref=e381]:
+                    - generic [ref=e382]:
+                      - paragraph [ref=e383]: Dense vectors
+                      - paragraph [ref=e384]: meaning, paraphrase
+                    - list [ref=e385]:
+                      - listitem [ref=e386]:
+                        - generic [ref=e387]: "1"
+                        - generic [ref=e388]: §4 Deposit refunded within 30 days
+                      - listitem [ref=e389]:
+                        - generic [ref=e390]: "2"
+                        - generic [ref=e391]: §5 Early termination and notice
+                      - listitem [ref=e392]:
+                        - generic [ref=e393]: "3"
+                        - generic [ref=e394]: §2 Rent payable monthly
+                      - listitem [ref=e395]:
+                        - generic [ref=e396]: "4"
+                        - generic [ref=e397]: "§4 Table: deposit £1,200, due on signing"
+                - generic [ref=e398]:
+                  - generic [ref=e399]:
+                    - generic [ref=e400]:
+                      - paragraph [ref=e401]: Fused, then reranked
+                      - paragraph [ref=e402]: cross-encoder score
+                    - list [ref=e403]:
+                      - listitem [ref=e404]:
+                        - generic [ref=e405]: "1"
+                        - generic [ref=e406]: §4 Deposit refunded within 30 days
+                        - generic [ref=e407]: "7.9"
+                      - listitem [ref=e408]:
+                        - generic [ref=e409]: "2"
+                        - generic [ref=e410]: "§4 Table: deposit £1,200, due on signing"
+                        - generic [ref=e411]: "4.1"
+                      - listitem [ref=e412]:
+                        - generic [ref=e413]: "3"
+                        - generic [ref=e414]: §5 Early termination and notice
+                        - generic [ref=e415]: "1.2"
+                      - listitem [ref=e416]:
+                        - generic [ref=e417]: "4"
+                        - generic [ref=e418]: "§12 Definitions: “deposit”"
+                        - generic [ref=e419]: "-2.3"
+                      - listitem [ref=e420]:
+                        - generic [ref=e421]: "5"
+                        - generic [ref=e422]: §2 Rent payable monthly
+                        - generic [ref=e423]: "-3.0"
+                  - generic [ref=e424]:
+                    - paragraph [ref=e425]:
+                      - text: A passage scores
+                      - code [ref=e426]: 1 / (60 + rank)
+                      - text: in each list and the scores add up, so something ranked well by both rises to the top.
+                    - generic [ref=e428]:
+                      - generic [ref=e429] [cursor=pointer]:
+                        - generic [ref=e430]: Cross-encoder rerank
+                        - generic [ref=e431]: MiniLM reads question and passage together
+                      - switch "Cross-encoder rerank MiniLM reads question and passage together" [checked] [ref=e432]
+            - list [ref=e434]:
+              - listitem [ref=e435]:
+                - generic [ref=e436]: Single
+                - paragraph [ref=e441]: One pooled search across the selected documents.
+                - paragraph [ref=e442]: "Triggered by: Default"
+              - listitem [ref=e443]:
+                - generic [ref=e444]: Multi
+                - paragraph [ref=e450]: Each document searched on its own and interleaved, so a long one can’t crowd out the rest.
+                - paragraph [ref=e451]: "Triggered by: “each”, “across”, “all documents”"
+              - listitem [ref=e452]:
+                - generic [ref=e453]: Compare
+                - paragraph [ref=e457]: Two documents, A earlier and B later, answered in four fixed sections.
+                - paragraph [ref=e458]: "Triggered by: “compare”, “differ”, “what changed”"
+      - region [ref=e459]:
+        - generic [ref=e460]:
+          - generic [ref=e461]:
+            - paragraph [ref=e462]:
+              - generic [ref=e463]: "04"
+              - text: Verification
+            - heading [level=2] [ref=e465]:
+              - text: Every citation is
+              - emphasis [ref=e466]: checked against its page.
+            - paragraph [ref=e467]: "After the answer is written, the server takes each statement, drops the stopwords, and counts how many of its key words actually appear on the page it cites. Try it: this runs the same scoring in your browser."
+          - generic [ref=e469]:
+            - group "Pick a statement that cites page 4" [ref=e470]:
+              - generic [ref=e472] [cursor=pointer]:
+                - radio "“The security deposit is refunded within 30 days of vacating the premises.” Supported" [checked] [ref=e473]
+                - generic [ref=e474]:
+                  - generic [ref=e475]: “The security deposit is refunded within 30 days of vacating the premises.”
+                  - generic [ref=e476]: Supported
+              - generic [ref=e481] [cursor=pointer]:
+                - radio "“Deductions from the deposit need an itemised statement and a photo inventory.” Partial" [ref=e482]
+                - generic [ref=e483]:
+                  - generic [ref=e484]: “Deductions from the deposit need an itemised statement and a photo inventory.”
+                  - generic [ref=e485]: Partial
+              - generic [ref=e490] [cursor=pointer]:
+                - radio "“The landlord pays interest on the deposit every quarter.” Unsupported" [ref=e491]
+                - generic [ref=e492]:
+                  - generic [ref=e493]: “The landlord pays interest on the deposit every quarter.”
+                  - generic [ref=e494]: Unsupported
+              - generic [ref=e498] [cursor=pointer]:
+                - radio "“Interest is payable on the deposit.” Supported" [ref=e499]
+                - generic [ref=e500]:
+                  - generic [ref=e501]: “Interest is payable on the deposit.”
+                  - generic [ref=e502]: Supported
+            - generic [ref=e507]:
+              - generic [ref=e508]:
+                - paragraph [ref=e509]: Cited page · p.4
+                - generic [ref=e510]: Live scoring · fictional page
+              - paragraph [ref=e512]: 4. Security deposit. The security deposit shall be refunded within 30 days of the tenant vacating the premises. Deductions require an itemised statement delivered to the tenant. Interest is not payable on the deposit.
+              - generic [ref=e513]:
+                - generic [ref=e514]:
+                  - img "100% word coverage" [ref=e515]:
+                    - generic [aria-hidden] [ref=e519]: "100"
+                  - generic [ref=e520]:
+                    - generic [ref=e521]: Supported
+                    - generic [ref=e526]: 8 of 8 key words
+                - generic [ref=e527]:
+                  - paragraph [ref=e528]: Key words in the statement
+                  - list "Key words, found or missing" [ref=e529]:
+                    - listitem [ref=e530]:
+                      - text: security
+                      - generic [ref=e531]: (on the page)
+                    - listitem [ref=e532]:
+                      - text: deposit
+                      - generic [ref=e533]: (on the page)
+                    - listitem [ref=e534]:
+                      - text: refunded
+                      - generic [ref=e535]: (on the page)
+                    - listitem [ref=e536]:
+                      - text: within
+                      - generic [ref=e537]: (on the page)
+                    - listitem [ref=e538]:
+                      - text: "30"
+                      - generic [ref=e539]: (on the page)
+                    - listitem [ref=e540]:
+                      - text: days
+                      - generic [ref=e541]: (on the page)
+                    - listitem [ref=e542]:
+                      - text: vacating
+                      - generic [ref=e543]: (on the page)
+                    - listitem [ref=e544]:
+                      - text: premises
+                      - generic [ref=e545]: (on the page)
+              - paragraph [ref=e546]: Every key word is on the page.
+              - paragraph [ref=e547]: "supported ≥ 70% · partial ≥ 40% · unsupported below · fewer than 2 key words: unchecked"
+      - region [ref=e548]:
+        - generic [ref=e549]:
+          - generic [ref=e550]:
+            - paragraph [ref=e551]:
+              - generic [ref=e552]: "05"
+              - text: Modes
+            - heading [level=2] [ref=e554]:
+              - text: One question,
+              - emphasis [ref=e555]: or two documents side by side.
+            - paragraph [ref=e556]: The planner reads your question and your selection, picks a strategy, and tells you which one it chose and why.
+          - generic [ref=e558]:
+            - generic [ref=e559]:
+              - radiogroup "Answer mode" [ref=e560]:
+                - radio "Single" [ref=e561]
+                - radio "Multi" [ref=e562]
+                - radio "Compare" [checked] [ref=e563]
+              - heading "Compare two versions" [level=3] [ref=e565]
+              - paragraph [ref=e566]: Four fixed sections, every line cited and page-checked. An empty section says so instead of inventing a difference.
+            - generic [ref=e567]:
+              - generic [ref=e568]: Illustration · fictional documents
+              - generic [ref=e571]:
+                - generic [ref=e572]:
+                  - generic [ref=e573]: In both
+                  - generic [ref=e574]:
+                    - text: Rent is due monthly in advance
+                    - generic [ref=e575]:
+                      - generic [ref=e576]: A
+                      - text: p.3
+                    - generic [ref=e577]:
+                      - generic [ref=e578]: B
+                      - text: p.3
+                - generic [ref=e579]:
+                  - generic [ref=e580]: Differences
+                  - generic [ref=e581]:
+                    - text: "Deposit: A refunds in 30 days"
+                    - generic [ref=e582]:
+                      - generic [ref=e583]: A
+                      - text: p.4
+                    - text: ; B in 14 days
+                    - generic [ref=e584]:
+                      - generic [ref=e585]: B
+                      - text: p.4
+                - generic [ref=e586]:
+                  - generic [ref=e587]: Only in A
+                  - generic [ref=e588]:
+                    - text: A break clause after 12 months
+                    - generic [ref=e589]:
+                      - generic [ref=e590]: A
+                      - text: p.5
+                - generic [ref=e591]:
+                  - generic [ref=e592]: Only in B
+                  - generic [ref=e593]: Nothing found in the excerpts.
+      - region [ref=e594]:
+        - generic [ref=e595]:
+          - generic [ref=e596]:
+            - paragraph [ref=e597]:
+              - generic [ref=e598]: "06"
+              - text: Document types
+            - heading [level=2] [ref=e600]:
+              - text: A lease is not
+              - emphasis [ref=e601]: a research paper.
+            - paragraph [ref=e602]: Each upload is classified from phrases in its opening pages, and each type gets its own heading rules, passage size and answering instructions. Wrong guess? Change the type and the document is re-chunked from the original.
+          - list [ref=e604]:
+            - listitem [ref=e605]:
+              - generic [ref=e606]:
+                - generic [ref=e607]: Contract
+                - generic [ref=e613]: ~900 chars
+              - paragraph [ref=e614]: Say which party each obligation binds; keep amounts, conditions and notice periods exactly as written.
+              - paragraph [ref=e615]: "Headings: Article, Clause, Schedule, Recitals"
+            - listitem [ref=e616]:
+              - generic [ref=e617]:
+                - generic [ref=e618]: Research paper
+                - generic [ref=e622]: ~1,100 chars
+              - paragraph [ref=e623]: Separate findings from speculation; report numbers with units and their experiment. Stops indexing at References.
+              - paragraph [ref=e624]: "Headings: Abstract, Methods, Results…"
+            - listitem [ref=e625]:
+              - generic [ref=e626]:
+                - generic [ref=e627]: Financial report
+                - generic [ref=e632]: ~700 chars
+              - paragraph [ref=e633]: Quote figures with currency, unit and period. Don’t compute new figures unless asked, and show the arithmetic.
+              - paragraph [ref=e634]: "Headings: Numbered and capitalised headings"
+            - listitem [ref=e635]:
+              - generic [ref=e636]:
+                - generic [ref=e637]: Regulation
+                - generic [ref=e641]: ~900 chars
+              - paragraph [ref=e642]: Quote “shall” and “must” precisely, give effective dates, and prefer the document that replaced a superseded one.
+              - paragraph [ref=e643]: "Headings: Chapter, Part, Annexure, Schedule"
+            - listitem [ref=e644]:
+              - generic [ref=e645]:
+                - generic [ref=e646]: Manual
+                - generic [ref=e650]: ~800 chars
+              - paragraph [ref=e651]: Give procedures as numbered steps in the document’s order, and keep warnings and cautions.
+              - paragraph [ref=e652]: "Headings: Step 1, numbered steps"
+            - listitem [ref=e653]:
+              - generic [ref=e654]:
+                - generic [ref=e655]: Other
+                - generic [ref=e660]: ~900 chars
+              - paragraph [ref=e661]: "The base rules only: excerpts, citations, refusal."
+              - paragraph [ref=e662]: "Headings: Numbered and capitalised headings"
+      - region [ref=e663]:
+        - generic [ref=e664]:
+          - generic [ref=e665]:
+            - paragraph [ref=e666]:
+              - generic [ref=e667]: "07"
+              - text: Privacy
+            - heading [level=2] [ref=e669]:
+              - text: Local by default.
+              - emphasis [ref=e670]: Cloud only if you choose.
+            - paragraph [ref=e671]: Out of the box every model runs on your machine, so your documents never leave it. Add a Gemini key and you can pick it per question; the model picker says which one sends passages away.
+          - generic [ref=e673]:
+            - generic [ref=e674]:
+              - generic [ref=e675]: The default stack
+              - generic [ref=e679]:
+                - generic [ref=e680]:
+                  - term [ref=e681]: Embeddings
+                  - definition [ref=e682]: bge-small-en-v1.5 via FastEmbed (ONNX, CPU)
+                - generic [ref=e683]:
+                  - term [ref=e684]: Rerank
+                  - definition [ref=e685]: ms-marco-MiniLM-L-6-v2 cross-encoder
+                - generic [ref=e686]:
+                  - term [ref=e687]: Answers
+                  - definition [ref=e688]: Ollama, qwen3:1.7b by default
+                - generic [ref=e689]:
+                  - term [ref=e690]: Storage
+                  - definition [ref=e691]: SQLite, Chroma and the original PDFs on your disk
+            - generic [ref=e692]:
+              - generic [ref=e693]: "Optional: Gemini"
+              - paragraph [ref=e697]:
+                - text: Enabled only when the server has
+                - code [ref=e698]: GEMINI_API_KEY
+                - text: . With accounts on, every user gets a private library, signed sessions and per-user rate limits.
+      - region [ref=e699]:
+        - generic [ref=e700]:
+          - generic [ref=e701]:
+            - paragraph [ref=e702]:
+              - generic [ref=e703]: "08"
+              - text: Questions
+            - heading [level=2] [ref=e705]:
+              - text: Honest answers,
+              - emphasis [ref=e706]: with their limits.
+          - generic [ref=e708]:
+            - group [ref=e709]:
+              - generic "Does “supported” mean the answer is correct?" [ref=e710] [cursor=pointer]
+            - group [ref=e712]:
+              - generic "What happens when the documents don’t answer my question?" [ref=e713] [cursor=pointer]
+            - group [ref=e715]:
+              - generic "Can it read scanned PDFs?" [ref=e716] [cursor=pointer]
+            - group [ref=e718]:
+              - generic "What are “Citations resolved N of M”?" [ref=e719] [cursor=pointer]
+            - group [ref=e721]:
+              - generic "How do versions work?" [ref=e722] [cursor=pointer]
+            - group [ref=e724]:
+              - generic "Which answer models are supported?" [ref=e725] [cursor=pointer]
+      - region [ref=e727]:
+        - generic [ref=e729]:
+          - heading [level=2] [ref=e730]:
+            - text: Upload a PDF.
+            - emphasis [ref=e731]: Check the answer.
+          - paragraph [ref=e732]: Run the backend locally, open the workspace, and ask your first question in under a minute.
+          - link "Open the workspace" [ref=e733] [cursor=pointer]:
+            - /url: /app
+    - contentinfo [ref=e737]:
+      - generic [ref=e738]:
+        - generic [ref=e739]:
+          - generic [ref=e740]: OmniDoc rag
+          - paragraph [ref=e747]: Retrieval-augmented answers over your own PDFs. Every statement cites a page, every citation is checked, and missing evidence gets a refusal.
+          - paragraph [ref=e748]: Answers are generated by a language model from your documents. The page check is a word-overlap heuristic, not proof. Not legal or financial advice.
+        - 'navigation "Footer: product" [ref=e749]':
+          - paragraph [ref=e750]: Product
+          - list [ref=e751]:
+            - listitem [ref=e752]:
+              - link "Workspace" [ref=e753] [cursor=pointer]:
+                - /url: /app
+            - listitem [ref=e754]:
+              - link "Why" [ref=e755] [cursor=pointer]:
+                - /url: /#problem
+            - listitem [ref=e756]:
+              - link "How it works" [ref=e757] [cursor=pointer]:
+                - /url: /#pipeline
+            - listitem [ref=e758]:
+              - link "Verification" [ref=e759] [cursor=pointer]:
+                - /url: /#verification
+            - listitem [ref=e760]:
+              - link "Modes" [ref=e761] [cursor=pointer]:
+                - /url: /#modes
+            - listitem [ref=e762]:
+              - link "FAQ" [ref=e763] [cursor=pointer]:
+                - /url: /#faq
+        - generic [ref=e764]:
+          - paragraph [ref=e765]: Stack
+          - list [ref=e766]:
+            - listitem [ref=e767]: FastAPI · SQLite · Chroma
+            - listitem [ref=e768]: bge-small · BM25 · RRF
+            - listitem [ref=e769]: MiniLM cross-encoder
+            - listitem [ref=e770]: Ollama or Gemini
+            - listitem [ref=e771]:
+              - link "Source on GitHub" [ref=e772] [cursor=pointer]:
+                - /url: https://github.com/harshitjadiya24/OmniDoc-RAG
+      - paragraph [ref=e774]: OmniDoc RAG
+  - button "Open Next.js Dev Tools" [ref=e780] [cursor=pointer]
+  - alert [ref=e784]

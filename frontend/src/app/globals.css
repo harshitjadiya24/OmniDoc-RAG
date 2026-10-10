@@ -350,3 +350,8 @@
   border-bottom: 2px solid #1fa86f;
   border-radius: 2px;
 }
+
+/* The intro film is server-rendered; the boot script decides before paint whether it shows. */
+html:not([data-intro="play"]) #intro-film {
+  display: none;
+}

@@ -145,12 +145,12 @@ def _ingest(library: Library, data: bytes, filename: str, progress=lambda _s: No
     if created:
         progress("Summarizing the document")
         try:
-            from src.llm.providers import ProviderUnavailable, chat_model
+            from src.llm.providers import ProviderUnavailable, chat_model, summary_chars
 
             # A dedicated summarise model: reasoning off and a bounded cap, so a local
             # reasoning model does not loop on the JSON prompt and stall the upload.
             llm = chat_model(settings.LLM_PROVIDER, settings, summarize=True)
-            updated = library.generate_summary(record.id, llm)
+            updated = library.generate_summary(record.id, llm, max_chars=summary_chars(settings.LLM_PROVIDER, settings))
             if updated is not None:
                 record = updated
         except ProviderUnavailable:

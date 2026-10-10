@@ -11,7 +11,7 @@ export type DocType = (typeof DOC_TYPES)[number];
 export const RetrievalModeSchema = z.enum(["dense", "bm25", "hybrid"]);
 export type RetrievalMode = z.infer<typeof RetrievalModeSchema>;
 
-export const ProviderIdSchema = z.enum(["ollama", "gemini"]);
+export const ProviderIdSchema = z.enum(["ollama", "openrouter", "mistral", "groq", "gemini"]);
 export type ProviderId = z.infer<typeof ProviderIdSchema>;
 
 export type Task = "ask" | "compare";

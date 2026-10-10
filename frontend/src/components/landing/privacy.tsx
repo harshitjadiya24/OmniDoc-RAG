@@ -20,7 +20,7 @@ export function Privacy() {
           Local by default. <em>Cloud only if you choose.</em>
         </>
       }
-      lede="Out of the box every model runs on your machine, so your documents never leave it. Add a Gemini key and you can pick it per question; the model picker says which one sends passages away."
+      lede="Out of the box every model runs on your machine, so your documents never leave it. Add an OpenRouter, Mistral, Groq or Gemini key and you can pick that model per question; the model picker says which one sends passages away."
     >
       <div className="grid grid-cols-1 gap-4 lg:grid-cols-[minmax(0,1.3fr)_minmax(0,0.7fr)]">
         <Reveal className="flex min-w-0 flex-col gap-4 rounded-2xl border border-verified/35 bg-surface p-6">
@@ -40,10 +40,10 @@ export function Privacy() {
         <Reveal delay={0.06} className="flex min-w-0 flex-col gap-3 rounded-2xl border border-line bg-surface-2 p-6">
           <span className="flex items-center gap-2 text-ink">
             <Cloud aria-hidden className="size-5 text-ink-muted" />
-            <span className="font-medium">Optional: Gemini</span>
+            <span className="font-medium">Optional: hosted models</span>
           </span>
           <p className="m-0 text-sm leading-relaxed text-ink-muted">
-            Enabled only when the server has <code className="font-mono text-ink">GEMINI_API_KEY</code>. With accounts on, every user gets a private library, signed sessions and
+            OpenRouter, Mistral, Groq and Gemini are enabled only when the server has that provider’s key (for example <code className="font-mono text-ink">OPENROUTER_API_KEY</code>). With accounts on, every user gets a private library, signed sessions and
             per-user rate limits.
           </p>
         </Reveal>

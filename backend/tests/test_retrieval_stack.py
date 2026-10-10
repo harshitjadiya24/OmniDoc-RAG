@@ -149,18 +149,36 @@ def test_plan_event_reports_the_retrieval_actually_used(lib):
 
 
 def test_providers_need_keys_and_report_why(monkeypatch):
-    s = Settings(GEMINI_API_KEY="")
+    s = Settings(LLM_PROVIDER="ollama", GEMINI_API_KEY="", GROQ_API_KEY="", MISTRAL_API_KEY="", OPENROUTER_API_KEY="")
     with pytest.raises(providers.ProviderUnavailable, match="GEMINI_API_KEY"):
         providers.chat_model("gemini", s)
+    with pytest.raises(providers.ProviderUnavailable, match="GROQ_API_KEY"):
+        providers.chat_model("groq", s)
+    with pytest.raises(providers.ProviderUnavailable, match="MISTRAL_API_KEY"):
+        providers.chat_model("mistral", s)
+    with pytest.raises(providers.ProviderUnavailable, match="OPENROUTER_API_KEY"):
+        providers.chat_model("openrouter", s)
     with pytest.raises(providers.ProviderUnavailable, match="Unknown provider"):
         providers.chat_model("other", s)
     assert type(providers.chat_model("gemini", Settings(GEMINI_API_KEY="g-test"))).__name__ == "ChatGoogleGenerativeAI"
+    assert type(providers.chat_model("groq", Settings(GROQ_API_KEY="gsk-test"))).__name__ == "ChatGroq"
+    assert type(providers.chat_model("mistral", Settings(MISTRAL_API_KEY="m-test"))).__name__ == "ChatMistralAI"
+    openrouter = providers.chat_model("openrouter", Settings(OPENROUTER_API_KEY="sk-or-test"))
+    assert type(openrouter).__name__ == "ChatOpenAI" and openrouter.openai_api_base == providers.OPENROUTER_URL
+    routed = Settings(OPENROUTER_MODEL="a:free", OPENROUTER_FALLBACK_MODELS=" b:free, a:free ,c:free,d:free")
+    assert providers.openrouter_models(routed) == ["a:free", "b:free", "c:free"]
 
     monkeypatch.setattr(providers, "_ollama_has", lambda settings: (False, "Ollama is not reachable."))
     monkeypatch.setattr(llm_api, "settings", s)
     body = TestClient(app).get("/llm/providers").json()
     assert body["default"] == "ollama"
-    assert [(p["id"], p["available"]) for p in body["providers"]] == [("ollama", False), ("gemini", False)]
+    assert [(p["id"], p["available"]) for p in body["providers"]] == [
+        ("ollama", False),
+        ("openrouter", False),
+        ("mistral", False),
+        ("groq", False),
+        ("gemini", False),
+    ]
 
 
 def test_ask_with_an_unconfigured_provider_is_rejected_before_streaming(monkeypatch):
@@ -178,11 +196,20 @@ def test_keyword_search_works_in_a_one_document_library(tmp_path):
 
 
 def test_every_provider_has_an_output_cap_and_quick_mode_turns_reasoning_off():
-    s = Settings(GEMINI_API_KEY="g-test", LLM_MAX_TOKENS=900)
+    s = Settings(
+        GEMINI_API_KEY="g-test",
+        GROQ_API_KEY="gsk-test",
+        MISTRAL_API_KEY="m-test",
+        OPENROUTER_API_KEY="sk-or-test",
+        LLM_MAX_TOKENS=900,
+    )
     ollama = providers.chat_model("ollama", s)
     quick = providers.chat_model("ollama", s, quick=True)
     assert ollama.num_predict == 900 and quick.num_predict == providers.QUICK_TOKENS and quick.reasoning is False
     assert providers.chat_model("gemini", s).max_output_tokens == 900
+    assert providers.chat_model("groq", s).max_tokens == 900
+    assert providers.chat_model("mistral", s).max_tokens == 900
+    assert providers.chat_model("openrouter", s).max_tokens == 900
     assert providers.chat_model("gemini", s, quick=True).max_output_tokens == providers.QUICK_TOKENS
 
 

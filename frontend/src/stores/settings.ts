@@ -1,6 +1,6 @@
 import { create } from "zustand";
 import { createJSONStorage, persist } from "zustand/middleware";
-import type { ProviderId, RetrievalMode } from "@/lib/api/schemas";
+import { type ProviderId, ProviderIdSchema, type RetrievalMode } from "@/lib/api/schemas";
 
 export type Settings = {
   mode: RetrievalMode;
@@ -21,7 +21,7 @@ export function sanitizeSettings(raw: unknown): Partial<Settings> {
   if (r.mode === "dense" || r.mode === "bm25" || r.mode === "hybrid") out.mode = r.mode;
   if (typeof r.rerank === "boolean") out.rerank = r.rerank;
   if (typeof r.rewrite === "boolean") out.rewrite = r.rewrite;
-  if (r.provider === "ollama" || r.provider === "gemini" || r.provider === null) out.provider = r.provider;
+  if (r.provider === null || ProviderIdSchema.safeParse(r.provider).success) out.provider = r.provider as ProviderId | null;
   return out;
 }
 

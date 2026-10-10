@@ -27,12 +27,29 @@ class Settings(BaseSettings):
     UPLOADS_PER_HOUR: int = 30
     LOG_JSON: bool = True
 
-    # Answer model: ollama (local, default) or gemini
+    # Answer model: ollama (local, default), openrouter, mistral, groq or gemini
     LLM_PROVIDER: str = "ollama"
     OLLAMA_MODEL: str = "qwen3:1.7b"
     OLLAMA_BASE_URL: str = "http://localhost:11434"
     # Hard cap on generated tokens. Reasoning models can loop; without a cap one request ran past 19,000 tokens.
     LLM_MAX_TOKENS: int = 2048
+    OPENROUTER_API_KEY: str = ""
+    # A free model (":free"): 20 requests a minute and 50 a day on a key that has never bought credits.
+    OPENROUTER_MODEL: str = "nvidia/nemotron-3-super-120b-a12b:free"
+    # Tried in order, within the same request, when the model above is busy upstream (free models often are).
+    OPENROUTER_FALLBACK_MODELS: str = "google/gemma-4-31b-it:free,google/gemma-4-26b-a4b-it:free"
+    MISTRAL_API_KEY: str = ""
+    MISTRAL_MODEL: str = "mistral-small-latest"
+    GROQ_API_KEY: str = ""
+    GROQ_MODEL: str = "qwen/qwen3.8-27b"
+    # Groq free-tier quota for the key (read from its x-ratelimit headers). The app spends the same
+    # budget so a question over it is refused up front, not mid-answer. 0 tokens/minute turns it off.
+    GROQ_TOKENS_PER_MINUTE: int = 8000
+    GROQ_REQUESTS_PER_DAY: int = 1000
+    # Output generated in the last minute plus a request's max_tokens must fit this (1000 on the free tier),
+    # so a request's max_tokens can never exceed it.
+    GROQ_OUTPUT_TOKENS_PER_MINUTE: int = 1000
+    GROQ_MAX_TOKENS: int = 1000
     GEMINI_API_KEY: str = ""
     GEMINI_MODEL: str = "gemini-3.1-pro"
 

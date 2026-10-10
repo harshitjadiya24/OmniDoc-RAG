@@ -42,3 +42,11 @@ test("skip link moves focus to main content", async ({ page }) => {
   await skip.press("Enter");
   await expect(page.locator("#main")).toBeFocused();
 });
+
+test("pages declare the tab icon and the iOS home-screen icon", async ({ page, request }) => {
+  await open(page, "/app");
+  const icon = await page.locator('link[rel="icon"][type="image/svg+xml"]').getAttribute("href");
+  const apple = await page.locator('link[rel="apple-touch-icon"]').getAttribute("href");
+  expect((await request.get(icon!)).headers()["content-type"]).toContain("image/svg+xml");
+  expect((await request.get(apple!)).headers()["content-type"]).toBe("image/png");
+});

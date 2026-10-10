@@ -102,7 +102,7 @@ class Library:
     def get_document(self, doc_id: str) -> DocumentRecord | None:
         return self._store.get(doc_id)
 
-    def generate_summary(self, doc_id: str, llm) -> DocumentRecord | None:
+    def generate_summary(self, doc_id: str, llm, max_chars: int | None = None) -> DocumentRecord | None:
         """Summarise the document and suggest example questions with the given LLM, then store both.
         Best-effort: on model failure the document is left without a summary."""
         from src.docqa.summarize import summarize_document
@@ -110,7 +110,8 @@ class Library:
         record = self._store.get(doc_id)
         if record is None:
             return None
-        summary, questions = summarize_document(llm, record.title, self._store.document_text(doc_id))
+        text = self._store.document_text(doc_id)
+        summary, questions = summarize_document(llm, record.title, text[:max_chars] if max_chars else text)
         self._store.update(doc_id, {"summary": summary, "example_questions": tuple(questions)})
         return self._store.get(doc_id)
 

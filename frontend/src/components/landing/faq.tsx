@@ -16,7 +16,7 @@ const FAQ = [
     a: "A number the browser derives: how many of the answer’s citations name a document and page that were among the passages actually retrieved. A citation that matches nothing is marked “Unverified citation”.",
   },
   { q: "How do versions work?", a: "Edit a document and list what it supersedes, by document ID or reference number. The older document is labelled superseded in the library, the evidence and the prompt, and answers prefer the newer one." },
-  { q: "Which answer models are supported?", a: "A local Ollama model by default, or Google Gemini when the server has an API key. Every model has a hard output cap, and a failure mid-answer ends the stream with the provider’s reason." },
+  { q: "Which answer models are supported?", a: "A local Ollama model by default, or OpenRouter, Mistral, Groq or Google Gemini when the server has that provider’s API key. Every model has a hard output cap, and a failure mid-answer ends the stream with the provider’s reason." },
 ];
 
 export function Faq() {
