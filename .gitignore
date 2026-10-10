@@ -37,3 +37,7 @@ backend/data/library/
 backend/data/chroma_db/
 
 frontend/test-results/
+
+# Public instance served by deploy/go-live.sh (visitors' accounts and uploads)
+backend/data/public/
+deploy/.logs/

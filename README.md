@@ -21,11 +21,12 @@ By default everything runs on your machine: local embeddings, a local reranker a
 5. [How it works](#how-it-works)
 6. [Configuration](#configuration)
 7. [Deploying with Docker Compose](#deploying-with-docker-compose)
-8. [API reference](#api-reference)
-9. [Project structure](#project-structure)
-10. [Testing and CI](#testing-and-ci)
-11. [Troubleshooting](#troubleshooting)
-12. [Limitations](#limitations)
+8. [Putting it online from your Mac](#putting-it-online-from-your-mac)
+9. [API reference](#api-reference)
+10. [Project structure](#project-structure)
+11. [Testing and CI](#testing-and-ci)
+12. [Troubleshooting](#troubleshooting)
+13. [Limitations](#limitations)
 
 ---
 
@@ -381,6 +382,25 @@ The API deliberately runs **one worker**: rate limits, upload jobs and caches li
 
 ---
 
+## Putting it online from your Mac
+
+The live site is **https://omnidoc-rag.vercel.app**: the frontend runs on Vercel and the API runs on this Mac, reached through a free Cloudflare quick tunnel. (Hugging Face Docker Spaces now need a paid PRO plan, and the API needs about 1 GB of RAM, more than most free hosts give.)
+
+```bash
+npm install -g vercel cloudflared   # once
+vercel login                        # once
+deploy/go-live.sh                   # each time you want the site to work
+```
+
+The script opens the tunnel, starts a **separate public API** on port 8001 (accounts required; visitors' libraries in `backend/data/public`, never your own `backend/data/library`), and rebuilds the site with the tunnel's address, because a quick tunnel gets a new address on every start. Keep the terminal open; **Ctrl+C takes the API offline**, and the site then says the API isn't answering.
+
+- The site works only while your Mac is on and the script is running.
+- Everyone who signs up shares your model quota (OpenRouter free: 50 requests a day).
+- The tunnel uses HTTP/2: with cloudflared's default QUIC, uploads larger than a few KB stalled.
+- For a permanent address, use a named Cloudflare tunnel on your own domain, or host the API on a server with about 1 GB of RAM using `backend/Dockerfile`.
+
+---
+
 ## API reference
 
 Full schemas are at `http://localhost:8000/docs`.
@@ -452,6 +472,7 @@ An empty `document_ids` searches every document. `task: "compare"` needs exactly
 │   ├── tests/              vitest unit tests and Playwright end-to-end tests
 │   ├── docs/               ARCHITECTURE.md, DESIGN.md
 │   └── Dockerfile
+├── deploy/go-live.sh       put the site online from this Mac (Vercel + Cloudflare tunnel)
 ├── docker-compose.yml
 └── .env.example
 ```

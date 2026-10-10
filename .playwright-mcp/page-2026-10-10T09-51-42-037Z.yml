@@ -1,0 +1,23 @@
+- generic [active] [ref=f10e1]:
+  - link "Skip to content" [ref=f10e2] [cursor=pointer]:
+    - /url: "#main"
+  - generic [ref=f10e3]:
+    - banner [ref=f10e4]:
+      - generic [ref=f10e5]:
+        - generic [ref=f10e6]:
+          - link "OmniDoc home" [ref=f10e7] [cursor=pointer]:
+            - /url: /
+            - generic [ref=f10e8]: OmniDoc rag
+          - generic [ref=f10e16]: Workspace
+        - generic [ref=f10e17]:
+          - button "Open command palette" [ref=f10e18]:
+            - generic [ref=f10e21]: Search & actions
+            - generic [ref=f10e22]: ⌘K
+          - button "Switch to light theme" [ref=f10e23]
+    - main [ref=f10e30]:
+      - generic [ref=f10e31]:
+        - heading "Workspace" [level=1] [ref=f10e32]
+        - status [ref=f10e33]:
+          - generic [ref=f10e37]: Connecting to the API
+        - text: Connecting…
+  - alert [ref=f10e38]

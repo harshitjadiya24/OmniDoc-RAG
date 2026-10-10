@@ -11,9 +11,11 @@ RUN pip install --no-cache-dir -r requirements.txt
 
 COPY src ./src
 # Fetch the embedding and rerank models at build time so the first request is not a download.
+# A fixed cache path the runtime user owns: the default (/tmp, written as root) may not be writable later.
+ENV FASTEMBED_CACHE_PATH=/app/models
 RUN python -c "from fastembed import TextEmbedding; from fastembed.rerank.cross_encoder import TextCrossEncoder; TextEmbedding('BAAI/bge-small-en-v1.5'); TextCrossEncoder('Xenova/ms-marco-MiniLM-L-6-v2')"
 
-RUN useradd --create-home app && mkdir -p data/library && chown -R app data
+RUN useradd --create-home --uid 1000 app && mkdir -p data/library && chown -R app data /app/models
 USER app
 
 ENV LIBRARY_DIR=/app/data/library
